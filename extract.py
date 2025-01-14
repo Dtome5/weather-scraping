@@ -1,6 +1,7 @@
 import requests
 import h5py
 import pandas as pd
+import polars as pl
 import re
 import json
 import urllib.request
@@ -75,14 +76,47 @@ def append_hdf5(group, dataset, obj):
         group[dataset][-len(data) :] = data
 
 
-getnoaa()
-gettmpavg()
+def pl_to_hdf5(df, filepath):
+    file = h5py.File(filepath, mode="a")
+    cols = df.columns
+    for col in cols:
+        print(col)
+        dset = file.create_dataset(
+            col, shape=(None,), dtype=df[col].dtype, data=df[col], chunks=True
+        )
 
+
+def hdf5_to_pl(filepath: str, k=None) -> pl.DataFrame:
+    file = h5py.File(filepath, mode="r+")
+    dictionary = {}
+    if k:
+        file = file[k]
+    keys = file.keys()
+    for key in keys:
+        print(f"keys is {key}")
+        dictionary[key] = list(file[key])
+    df = pl.DataFrame(dictionary)
+    return df
+
+
+def load_to_hdf5(location, temperature, humidity, wind_speed):
+    for i in len(temperature):
+        df = pl.DataFrame(
+            {
+                "temperature": temperature[i],
+                "humidity": humidity[i],
+                "wind speed": wind_speed[i],
+            }
+        )
+        pl_to_hdf5(df, filepath, location[i])
+
+
+# getnoaa()
+# gettmpavg()
+"""
 file = h5py.File("weather.hdf5", "a")
 websites = pd.read_csv("websites.csv")
 today = (datetime.now() - timedelta(4)).date().strftime("%y-%m-%d")
-print(today)
-
 urls = [websites["URL"][i] + f"/date/{today}" for i in range(len(websites))]
 pages = [requests.get(url) for url in urls]
 scraped_pages = [bs(page.content, "html.parser") for page in pages]
@@ -92,7 +126,6 @@ temperature = [to_num(temp) for temp in temperature]
 humidity = [to_num(hum) for hum in humidity]
 locations = [get_loc(scraped_page) for scraped_page in scraped_pages]
 wind_speeds = [get_wind_speed(scraped_page) for scraped_page in scraped_pages]
-
 df = pd.DataFrame(
     data={
         "Date": today,
@@ -102,9 +135,20 @@ df = pd.DataFrame(
         "Wind_speeds": wind_speeds,
     }
 )
+"""
+df = pd.DataFrame(
+    data={
+        "location": ["Abuja"],
+        "Temperature": [30],
+        "Humidity": [30],
+        "Wind Speeds": [10],
+    }
+)
 print(df)
-df.to_hdf(path_or_buf="weather2.hdf5", key="r")
-
+df.to_hdf(path_or_buf="weather2.hdf5", key=df.iloc[0, 0])
+print(hdf5_to_pl("weather.hdf5", k="Lagos, Lagos, Nigeria"))
+file2 = h5py.File("weather2.hdf5", "r")
+print(list(file2[df.iloc[0, 0]]))
 # for i in scraped_pages:
 # print(
 #     file[locations[0]]["temperature"][:],
@@ -121,12 +165,4 @@ df.to_hdf(path_or_buf="weather2.hdf5", key="r")
 #         append_hdf5(group, data_str[d], data[d][loc])
 # print(group[data_str[d]])
 
-
-print(
-    temperature[:],
-    humidity[:],
-    locations[:],
-    wind_speeds[:],
-)
-
-file.close()
+# file.close()
