@@ -49,13 +49,11 @@ daily_dataframe = pd.DataFrame(data=daily_data)
 print(daily_dataframe)
 """
 
-webpages = pl.read_csv("websites.csv")
+webpages = pd.read_csv("websites.csv")
 locations = webpages.get_column("Location")
 data = h5py.File("weather.hdf5", "r")
 today = datetime.now().date()
-yesterday = today - timedelta(1)
-twoda = today - timedelta(2)
-
+# """
 df = pl.DataFrame(
     {
         "date": [today - timedelta(x) for x in range(99)],
@@ -70,33 +68,21 @@ df = pl.DataFrame(
         "Wind Speed": np.random.uniform(5, 15, 99),
     }
 )
-
 abuja = df.filter(pl.col("locations") == "Abuja")
 bh = df.filter(pl.col("locations") == "Bad Honeff")
 london = df.filter(pl.col("locations") == "London")
-
-
-# print(pd.read_hdf("weather2.hdf5"))
-df2 = pl.read_csv(
-    "/home/dtome/Code/Python/WebScraping/open-meteo-9.03N7.47E480mabuja.csv",
-    skip_rows=3,
-)
-df3 = pl.read_csv(
-    "/home/dtome/Code/Python/WebScraping/open-meteo-50.65N7.18E77mBadHonnef.csv",
-    skip_rows=3,
-)
-df4 = pl.read_csv(
-    "/home/dtome/Code/Python/WebScraping/open-meteo-51.49N0.16W23mlondon.csv",
-    skip_rows=3,
-)
-print(df2)
+# """
 
 
 fig, ax = plt.subplots(figsize=(8, 5))
 fig2, ax2 = plt.subplots(figsize=(8, 5))
 fig3, ax3 = plt.subplots(figsize=(8, 5))
-
-dataframes = [df2, df3, df4]
+websites = pd.read_csv("websites.csv")
+dataframes = [
+    pd.read_hdf("weather3.hdf5", key=websites["Location"][i])
+    for i in range(websites.shape[0])
+]
+print(dataframes[1])
 
 
 def plot_vals(dfs, col, figname):
@@ -109,17 +95,12 @@ def plot_vals(dfs, col, figname):
     fig.savefig(f"{figname}.png")
 
 
-print(df2[:, 0].str.strptime(pl.Date, format="%Y-%m-%dT%H:%M"))
-df5 = df2.__copy__()
-df5 = df5.replace_column(0, df5[:, 0].str.strptime(pl.Date, format="%Y-%m-%dT%H:%M"))
-print(df5.group_by(df5[:, 0]).agg(pl.col(df5.columns[1]).mean()))
-plot_vals(dataframes, 1, "plt1")
-# plot_vals(df2, 1, "plot3.png")
-# plot_vals(df3, 1, "plot3.png")
-# plot_vals(df4, 1, "plot3.png")
-# plot_vals(df2, 2, "plot4.png")
-# plot_vals(df3, 2, "plot4.png")
-# plot_vals(df4, 2, "plot4.png")
-# plot_vals(df2, 4, "plot5.png")
-# plot_vals(df3, 4, "plot5.png")
-# plot_vals(df4, 4, "plot5.png")
+def plot_loc(dfs, figname):
+    fig, ax = plt.subplots()
+    for df in dfs:
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
+        ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+        as.plot(df.iloc[:,0].str.strptime(format="%Y-%m-%dT%H:%M"))
+
+
+# plot_vals(dataframes, 1, "plt1")
