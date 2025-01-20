@@ -70,7 +70,7 @@ def meteo(loc, lat, long):
     hourly_wind_speed_10m = hourly.Variables(2).ValuesAsNumpy()
 
     hourly_data = {
-        "date": pd.date_range(
+        "time": pd.date_range(
             start=pd.to_datetime(hourly.Time(), unit="s", utc=True),
             end=pd.to_datetime(hourly.TimeEnd(), unit="s", utc=True),
             freq=pd.Timedelta(seconds=hourly.Interval()),
@@ -78,9 +78,9 @@ def meteo(loc, lat, long):
         )
     }
 
-    hourly_data["temperature_2m"] = hourly_temperature_2m
-    hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
-    hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
+    hourly_data["temperature"] = hourly_temperature_2m
+    hourly_data["humidity"] = hourly_relative_humidity_2m
+    hourly_data["wind_speed"] = hourly_wind_speed_10m
 
     hourly_dataframe = pd.DataFrame(data=hourly_data)
     return hourly_dataframe
@@ -101,7 +101,7 @@ humidity = [to_num(hum) for hum in humidity]
 locations = websites["Location"]
 wind_speeds = [get_wind_speed(scraped_page) for scraped_page in scraped_pages]
 frames = {}
-frame["London"] = hourly
+frames["London"] = meteo("London", 51.5085, -0.1257)
 # for i in range(len(locations)):
 #     frames[locations[i]] = pd.DataFrame(
 #         {
