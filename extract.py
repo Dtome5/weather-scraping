@@ -102,6 +102,8 @@ locations = websites["Location"]
 wind_speeds = [get_wind_speed(scraped_page) for scraped_page in scraped_pages]
 frames = {}
 frames["London"] = meteo("London", 51.5085, -0.1257)
+frames["Bad_Honnef"] = meteo("London", 50.6434, 7.2278)
+frames["Abuja"] = meteo("London", 9.0579, 7.4951)
 # for i in range(len(locations)):
 #     frames[locations[i]] = pd.DataFrame(
 #         {
@@ -113,5 +115,5 @@ frames["London"] = meteo("London", 51.5085, -0.1257)
 #     )
 
 for frame in frames.keys():
-    df = pd.read_hdf("weather.hdf5", key=frame)
+    # df = pd.read_hdf("weather.hdf5", key=frame)
     frames[frame].to_hdf("weather.hdf5", key=frame)

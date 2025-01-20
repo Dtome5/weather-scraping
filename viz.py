@@ -28,7 +28,7 @@ fig2, ax2 = plt.subplots(figsize=(8, 5))
 fig3, ax3 = plt.subplots(figsize=(8, 5))
 websites = pd.read_csv("websites.csv")
 dataframes = [
-    pd.read_hdf("weather3.hdf5", key=websites["Location"][i])
+    pd.read_hdf("weather.hdf5", key=websites["Location"][i])
     for i in range(websites.shape[0])
 ]
 print(dataframes[1])
