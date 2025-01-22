@@ -1,7 +1,3 @@
-Here’s a proposed README file for the project:
-
----
-
 # Weather Data Scraper and Visualizer
 
 This project provides a framework for collecting, storing, and visualizing weather data from multiple locations. It automates data extraction using web scraping and APIs, stores the results in an HDF5 file, and generates informative visualizations of key weather parameters.
