@@ -1,4 +1,4 @@
-# Weather Data Scraper and Visualizer
+# Weather Data Scraper 
 
 This project provides a framework for collecting, storing, and visualizing weather data from multiple locations. It automates data extraction using web scraping and APIs, stores the results in an HDF5 file, and generates informative visualizations of key weather parameters.
 
