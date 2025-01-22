@@ -13,38 +13,38 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as bs
 from requests.models import LocationParseError
 
-
 def to_num(var: str):
+    # convert string to number
     new_val = ""
     for i in var:
         if i.isnumeric() == True:
             new_val += i
     return int(new_val)
 
-
+# retrieves temperature
 def get_temp(soup: bs):
     val = soup.select_one(".CurrentConditions--tempValue--zUBSz")
     return val.text
 
-
+# retrieves humidity
 def get_humidity(soup: bs):
     val = soup.select_one(
         "div.WeatherDetailsListItem--WeatherDetailsListItem--HLP3I:nth-child(3) > div:nth-child(3) > span:nth-child(1)"
     )
     return val.text
 
-
+# retrieves location
 def get_loc(soup: bs):
     val = soup.select_one(".CurrentConditions--location--yub4l")
     return val.text
 
-
+# retrieves wind speed
 def get_wind_speed(soup: bs):
     val = soup.select_one(".Wind--windWrapper--NsCjc > span:nth-child(2)")
     return val.text
 
 
-# """
+# retrieves historical data using openmeteo API
 def meteo(loc, lat, long):
     cache_session = requests_cache.CachedSession(".cache", expire_after=-1)
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
@@ -86,34 +86,48 @@ def meteo(loc, lat, long):
     return hourly_dataframe
 
 
-# """
-
-file = h5py.File("weather.hdf5", "a")
+# imports webpage list from csv
 websites = pd.read_csv("websites.csv")
-today = datetime.now().strftime("%Y-%m-%d-%H-%M")
+today = datetime.now().strftime("%Y-%m-%d %H:%M")
+# creates list of urls from dataframe
 urls = [websites["URL"][i] for i in range(len(websites))]
+# gets pages
 pages = [requests.get(url) for url in urls]
+# parses html
 scraped_pages = [bs(page.content, "html.parser") for page in pages]
+# retrieve parameters
 temperature = [get_temp(scraped_page) for scraped_page in scraped_pages]
 humidity = [get_humidity(scraped_page) for scraped_page in scraped_pages]
+# convert to integers
 temperature = [to_num(temp) for temp in temperature]
 humidity = [to_num(hum) for hum in humidity]
 locations = websites["Location"]
 wind_speeds = [get_wind_speed(scraped_page) for scraped_page in scraped_pages]
+# creates dataframes for locations
 frames = {}
-frames["London"] = meteo("London", 51.5085, -0.1257)
-frames["Bad_Honnef"] = meteo("London", 50.6434, 7.2278)
-frames["Abuja"] = meteo("London", 9.0579, 7.4951)
-# for i in range(len(locations)):
-#     frames[locations[i]] = pd.DataFrame(
-#         {
-#             "time": [today],
-#             "temperature": [temperature[i]],
-#             "humidity": [humidity[i]],
-#             "wind_speed": [wind_speeds[i]],
-#         }
-#     )
-
+for i in range(len(locations)):
+    frames[locations[i]] = pd.DataFrame(
+        {
+            "time": [today],
+            "temperature": [temperature[i]],
+            "humidity": [humidity[i]],
+            "wind_speed": [wind_speeds[i]],
+        }
+    )
+# saves dataframes to hdf5
 for frame in frames.keys():
-    # df = pd.read_hdf("weather.hdf5", key=frame)
-    frames[frame].to_hdf("weather.hdf5", key=frame)
+    with pd.HDFStore("weather.hdf5",mode="a") as hdf:
+        hdf.append(frame,frames[frame])
+
+        # frames[frame].to_hdf("weather3.hdf5",mode="a", key=frame,append=True)
+# for frame in frames.keys():
+#     print(pd.read_hdf("weather3.hdf5",mode="r",key = frame))
+print(datetime.now())
+def past():
+    frames={}
+    frames["London"] = meteo("London", 51.5085, -0.1257)
+    frames["Bad_Honnef"] = meteo("London", 50.6434, 7.2278)
+    frames["Abuja"] = meteo("London", 9.0579, 7.4951)
+    for frame in frames.keys():
+        with pd.HDFStore("weather.hdf5",mode="a") as hdf:
+            hdf.append(frame,frames[frame])
