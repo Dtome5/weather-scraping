@@ -91,18 +91,4 @@ Replace `/path/to/extract.py` with the full path to the script.
 
 ---
 
-## Future Improvements
 
-- Add error-handling features for dynamic content and API failures.
-- Extend visualizations to include seasonal and long-term trends.
-- Implement real-time data fetching and visualization updates.
-
----
-
-## License
-
-This project is licensed under the MIT License.
-
---- 
-
-Feel free to modify this README as needed to suit your project specifics.
