@@ -131,3 +131,5 @@ def past():
     for frame in frames.keys():
         with pd.HDFStore("weather.hdf5",mode="a") as hdf:
             hdf.append(frame,frames[frame])
+if std.argv[1] == past:
+    past()
