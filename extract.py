@@ -8,7 +8,7 @@ import numpy as np
 import openmeteo_requests
 import requests_cache
 from retry_requests import retry
-
+import sys
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as bs
 from requests.models import LocationParseError
@@ -131,5 +131,5 @@ def past():
     for frame in frames.keys():
         with pd.HDFStore("weather.hdf5",mode="a") as hdf:
             hdf.append(frame,frames[frame])
-if std.argv[1] == past:
+if sys.argv[1] == past:
     past()
