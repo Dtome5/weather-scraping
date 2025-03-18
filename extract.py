@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as bs
 from requests.models import LocationParseError
 
+
 def to_num(var: str):
     # convert string to number
     new_val = ""
@@ -21,10 +22,12 @@ def to_num(var: str):
             new_val += i
     return int(new_val)
 
+
 # retrieves temperature
 def get_temp(soup: bs):
     val = soup.select_one(".CurrentConditions--tempValue--zUBSz")
     return val.text
+
 
 # retrieves humidity
 def get_humidity(soup: bs):
@@ -33,10 +36,12 @@ def get_humidity(soup: bs):
     )
     return val.text
 
+
 # retrieves location
 def get_loc(soup: bs):
     val = soup.select_one(".CurrentConditions--location--yub4l")
     return val.text
+
 
 # retrieves wind speed
 def get_wind_speed(soup: bs):
@@ -116,20 +121,24 @@ for i in range(len(locations)):
     )
 # saves dataframes to hdf5
 for frame in frames.keys():
-    with pd.HDFStore("weather.hdf5",mode="a") as hdf:
-        hdf.append(frame,frames[frame])
+    with pd.HDFStore("weather.hdf5", mode="a") as hdf:
+        hdf.append(frame, frames[frame])
 
         # frames[frame].to_hdf("weather3.hdf5",mode="a", key=frame,append=True)
 # for frame in frames.keys():
 #     print(pd.read_hdf("weather3.hdf5",mode="r",key = frame))
 print(datetime.now())
+
+
 def past():
-    frames={}
+    frames = {}
     frames["London"] = meteo("London", 51.5085, -0.1257)
     frames["Bad_Honnef"] = meteo("London", 50.6434, 7.2278)
     frames["Abuja"] = meteo("London", 9.0579, 7.4951)
     for frame in frames.keys():
-        with pd.HDFStore("weather.hdf5",mode="a") as hdf:
-            hdf.append(frame,frames[frame])
-if sys.argv[1] == past:
+        with pd.HDFStore("weather.hdf5", mode="a") as hdf:
+            hdf.append(frame, frames[frame])
+
+
+if sys.argv[0] == past:
     past()
