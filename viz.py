@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
+import sys
 from pandas.core.tools.datetimes import DatetimeScalar
 from matplotlib.collections import LineCollection
 from datetime import datetime, timedelta
@@ -30,7 +31,6 @@ dataframes = [
     pd.read_hdf("weather.hdf5", key=websites["Location"][i])
     for i in range(websites.shape[0])
 ]
-print(dataframes[1])
 
 
 def plot_vals(dfs, figname):
@@ -102,9 +102,7 @@ def plot_locs(dfs, figname):
 
 
 plot_vals(dataframes, "plt1")
-# for df in dataframes:
-# for i in range(dataframes[0].shape[1]):
-# plot_param(df,df.columns[i],i)
-# for i in range(len(dataframes)):
-# plot_loc(dataframes[i],websites["Location"][i],i)
 plot_locs(dataframes, "new.png")
+if len(sys.argv) > 1:
+    if sys.argv[1] == "show":
+        print(dataframes[1])

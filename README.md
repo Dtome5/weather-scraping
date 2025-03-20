@@ -75,10 +75,10 @@ Automate the data collection process by setting up a cron job. Here's how:
    ```
 2. Add the following line to schedule the `extract.py` script to run daily at midnight:
    ```bash
-   0 0 * * * /usr/bin/python3 /path/to/extract.py
+   0 12 * * * ~/run.sh
    ```
 
-Replace `/path/to/extract.py` with the full path to the script.
+Replace `/path/to/run.sh` with the full path to the script.
 
 3. Save and exit the editor. The cron job is now set to run daily.
 
@@ -87,8 +87,6 @@ Replace `/path/to/extract.py` with the full path to the script.
 ## Known Limitations
 
 - **Error Handling**: Currently, the scraping scripts lack robust error-handling mechanisms for dynamic content and unexpected webpage changes.
-- **Ethical Compliance**: Ensure adherence to website terms of service before scraping to avoid legal issues.
-
 ---
 
 

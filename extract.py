@@ -124,10 +124,7 @@ for frame in frames.keys():
     with pd.HDFStore("weather.hdf5", mode="a") as hdf:
         hdf.append(frame, frames[frame])
 
-        # frames[frame].to_hdf("weather3.hdf5",mode="a", key=frame,append=True)
-# for frame in frames.keys():
-#     print(pd.read_hdf("weather3.hdf5",mode="r",key = frame))
-print(datetime.now())
+print("adding ", datetime.now())
 
 
 def past():
@@ -140,5 +137,6 @@ def past():
             hdf.append(frame, frames[frame])
 
 
-if sys.argv[0] == past:
-    past()
+if len(sys.argv) > 1:
+    if sys.argv[1] == "past":
+        past()
