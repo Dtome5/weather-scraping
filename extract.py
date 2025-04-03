@@ -1,9 +1,5 @@
 import requests
-import h5py
 import pandas as pd
-import re
-import json
-import urllib.request
 import numpy as np
 import openmeteo_requests
 import requests_cache
@@ -11,14 +7,13 @@ from retry_requests import retry
 import sys
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as bs
-from requests.models import LocationParseError
 
 
 def to_num(var: str):
     # convert string to number
     new_val = ""
     for i in var:
-        if i.isnumeric() == True:
+        if i.isnumeric():
             new_val += i
     return int(new_val)
 
