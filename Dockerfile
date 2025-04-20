@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM python:3.12-slim
 
 # Set up environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -7,17 +7,7 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
 # Install system dependencies
-RUN apk add --no-cache \
-    build-base \
-    curl \
-    git \
-    rust \
-    cargo \
-    libffi-dev \
-    openssl-dev \
-    hdf5-dev \
-    cmake \
-    uv
+RUN pip install uv
 
 
 # Create and set working directory
@@ -39,7 +29,8 @@ COPY websites.csv .
 RUN touch weather.hdf5
 
 # Create cron job
-RUN echo "0 12 * * * cd /app && /app/run.sh >> /var/log/cron.log 2>&1" > /etc/crontabs/root
+
+RUN echo "0 12 * * * \n run.sh "| crontab -e
 
 # Create log file for cron
 RUN touch /var/log/cron.log
