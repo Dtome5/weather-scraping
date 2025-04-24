@@ -33,7 +33,7 @@ dataframes = [
 ]
 
 
-def plot_vals(dfs, figname):
+def plot_vals(dfs):
     for i in range(dfs[0].shape[1]):
         fig, ax = plt.subplots(figsize=(8, 5))
         for df in dfs:
@@ -80,7 +80,7 @@ def plot_vals(dfs, figname):
 #     fig.savefig(f"{loc}.png")
 
 
-def plot_locs(dfs, figname):
+def plot_locs(dfs):
     for i in range(len(dfs)):
         df = dfs[i]
         fig, ax = plt.subplots()
@@ -101,8 +101,11 @@ def plot_locs(dfs, figname):
         fig.savefig(f"{websites["Location"][i]}.png")
 
 
-plot_vals(dataframes, "plt1")
-plot_locs(dataframes, "new.png")
+plot_vals(dataframes)
+plot_locs(dataframes)
+def show():
+    print(dataframes[1])
+
 if len(sys.argv) > 1:
     if sys.argv[1] == "show":
         print(dataframes[1])

@@ -115,11 +115,11 @@ for i in range(len(locations)):
         }
     )
 # saves dataframes to hdf5
-for frame in frames.keys():
-    with pd.HDFStore("weather.hdf5", mode="a") as hdf:
-        hdf.append(frame, frames[frame])
-
-print("adding ", datetime.now())
+def load():
+    for frame in frames.keys():
+        with pd.HDFStore("weather.hdf5", mode="a") as hdf:
+            hdf.append(frame, frames[frame])
+    print("adding ", datetime.now())
 
 
 def past():
@@ -135,3 +135,5 @@ def past():
 if len(sys.argv) > 1:
     if sys.argv[1] == "past":
         past()
+    elif sys.argv[1] == "load":
+        load()
