@@ -125,8 +125,8 @@ def load():
 def past():
     frames = {}
     frames["London"] = meteo("London", 51.5085, -0.1257)
-    frames["Bad_Honnef"] = meteo("London", 50.6434, 7.2278)
-    frames["Abuja"] = meteo("London", 9.0579, 7.4951)
+    frames["Bad_Honnef"] = meteo("Bad_Honnef", 50.6434, 7.2278)
+    frames["Abuja"] = meteo("Abuja", 9.0579, 7.4951)
     for frame in frames.keys():
         with pd.HDFStore("weather.hdf5", mode="a") as hdf:
             hdf.append(frame, frames[frame])

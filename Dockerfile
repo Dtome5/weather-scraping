@@ -12,6 +12,7 @@ RUN apt-get update && \
 RUN pip install uv
 
 WORKDIR /app
+VOLUME /app/output 
 # Copy requirements file
 COPY ./pyproject.toml ./
 
@@ -36,6 +37,6 @@ RUN touch /var/log/cron.log
 
 # Command to run the scriptmg
 
-CMD ["uv", "run", "extract.py"]
+CMD ["uv", "run", "launch.py"]
 # Run entrypoint script
 
