@@ -137,3 +137,4 @@ if len(sys.argv) > 1:
         past()
     elif sys.argv[1] == "load":
         load()
+load()

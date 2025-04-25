@@ -36,6 +36,6 @@ RUN touch /var/log/cron.log
 
 # Command to run the scriptmg
 
-CMD ["uv", "run", "launch.py"]
+CMD ["uv", "run", "extract.py"]
 # Run entrypoint script
 

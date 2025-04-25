@@ -8,12 +8,12 @@ from pandas.core.tools.datetimes import DatetimeScalar
 from matplotlib.collections import LineCollection
 from datetime import datetime, timedelta
 
-
-webpages = pd.read_csv("websites.csv")
-locations = webpages["Location"]
-data = h5py.File("weather.hdf5", "r")
 today = datetime.now().date()
-df = pd.DataFrame(
+def get_data():
+    webpages = pd.read_csv("websites.csv")
+    locations = webpages["Location"]
+    data = h5py.File("weather.hdf5", "r")
+    df = pd.DataFrame(
     {
         "time": [today - timedelta(x) for x in range(99)],
         "Temperature": np.random.uniform(20, 40, 99),
@@ -21,16 +21,21 @@ df = pd.DataFrame(
         "Wind Speed": np.random.uniform(5, 15, 99),
     }
 )
+    return df
+
+
 
 
 fig, ax = plt.subplots(figsize=(8, 5))
 fig2, ax2 = plt.subplots(figsize=(8, 5))
 fig3, ax3 = plt.subplots(figsize=(8, 5))
 websites = pd.read_csv("websites.csv")
-dataframes = [
-    pd.read_hdf("weather.hdf5", key=websites["Location"][i])
-    for i in range(websites.shape[0])
-]
+
+def get_frames():
+    dataframes = [
+        pd.read_hdf("weather.hdf5", key=websites["Location"][i])
+        for i in range(websites.shape[0])
+    ]
 
 
 def plot_vals(dfs):
@@ -101,9 +106,10 @@ def plot_locs(dfs):
         fig.savefig(f"{websites["Location"][i]}.png")
 
 
-plot_vals(dataframes)
-plot_locs(dataframes)
+
 def show():
+    plot_vals(get_frames())
+    plot_locs(get_frames())
     print(dataframes[1])
 
 if len(sys.argv) > 1:

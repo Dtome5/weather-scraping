@@ -2,15 +2,13 @@ from datetime import datetime
 import subprocess
 from prefect import flow, task
 from extract import load
-from viz import plot_locs, plot_vals, dataframes,show
+from viz import show
 
 @task()
 def load_process():
     load()
 @task()
 def plot():
-    plot_locs(dataframes)
-    plot_vals(dataframes)
     show()
 @flow()
 def schedule():
